@@ -3,8 +3,16 @@ import Footer from "@/components/footer";
 import ProductCard from "@/components/ProductCard";
 import prisma from "@/lib/prisma";
 
+export interface Product {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  currentBid: number;
+}
+
 export default async function WomenPage() {
-  const products = await prisma.product.findMany({
+  const products: Product[] = await prisma.product.findMany({
     where: { category: "women" },
   });
 
@@ -18,7 +26,7 @@ export default async function WomenPage() {
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Updated grid to show four cards per row */}
-          {products.map((product) => (
+          {products.map((product: Product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
