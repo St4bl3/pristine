@@ -1,6 +1,5 @@
-// src/components/ProductCard.tsx
-
 import Link from "next/link";
+import Image from "next/image";
 
 interface ProductCardProps {
   product: {
@@ -14,9 +13,11 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-2">
-      <img
+      <Image
         src={product.image}
         alt={product.name}
+        width={500}
+        height={300}
         className="w-full h-48 object-cover"
       />
       <div className="p-4">

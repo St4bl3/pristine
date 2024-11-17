@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true, // Enables React Strict Mode
+  images: {
+    domains: ["via.placeholder.com"], // Allow images from via.placeholder.com
+  },
 };
 
 export default nextConfig;

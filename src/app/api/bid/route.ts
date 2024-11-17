@@ -1,15 +1,16 @@
-// src/app/api/bid/route.ts
-
-import { NextResponse, NextRequest } from "next/server";
+import Pusher from "pusher";
 import prisma from "@/lib/prisma";
-import { getAuth } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
-  const { userId } = getAuth(request);
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+const pusher = new Pusher({
+  appId: "your-app-id",
+  key: "your-pusher-key",
+  secret: "your-pusher-secret",
+  cluster: "your-cluster",
+  useTLS: true,
+});
 
+export async function POST(request: Request) {
   const { productId, bidAmount } = await request.json();
 
   const product = await prisma.product.findUnique({
@@ -37,21 +38,23 @@ export async function POST(request: NextRequest) {
     data: { currentBid: bidAmount },
   });
 
-  // Add bid to product's bids
-  await prisma.bid.create({
+  // Add the new bid
+  const newBid = await prisma.bid.create({
     data: {
       bidAmount,
-      bidderId: userId,
+      bidderId: "currentUserId", // Replace with actual user ID from authentication
       productId,
     },
   });
 
-  // Add to ledger
-  await prisma.ledger.create({
-    data: {
-      productId,
-      bidderId: userId,
-      bidAmount,
+  // Trigger Pusher event
+  pusher.trigger(`product-${productId}`, "bid-placed", {
+    currentBid: bidAmount,
+    newBid: {
+      id: newBid.id,
+      bidderId: newBid.bidderId,
+      bidAmount: newBid.bidAmount,
+      timestamp: newBid.timestamp,
     },
   });
 

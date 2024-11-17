@@ -7,6 +7,7 @@ import BidInput from "@/components/BidInput";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Pusher from "pusher-js";
+import Image from "next/image";
 
 export default function ProductPage({
   params,
@@ -117,15 +118,16 @@ export default function ProductPage({
   return (
     <div>
       <Navbar />
-      {/* Added top padding to compensate for navbar */}
       <div className="container mx-auto my-8 px-4 lg:px-0 pt-24">
-        {/* Adjusted pt-24 to avoid overlap */}
+        {/* Adjusted padding to avoid navbar overlap */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Section */}
           <div className="bg-white p-6 shadow-lg rounded-lg">
-            <img
+            <Image
               src={product.image}
               alt={product.name}
+              width={500}
+              height={300}
               className="w-full h-96 object-cover rounded-md"
             />
             <h1 className="text-3xl font-bold mt-6">{product.name}</h1>
