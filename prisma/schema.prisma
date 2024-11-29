@@ -1,8 +1,7 @@
 // prisma/schema.prisma
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["mongoDb"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -10,35 +9,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AuctionType {
+  STANDARD
+  SEALED
+}
+
 model Product {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  name            String
-  category        String
-  image           String
-  description     String
-  startingPrice   Float
-  currentBid      Float
-  auctionEndTime  DateTime
-  status          String
-  bids            Bid[]
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  name           String
+  category       String
+  image          String
+  description    String
+  startingPrice  Float
+  currentBid     Float
+  auctionEndTime DateTime
+  status         String
+  auctionType    AuctionType
+  winnerId       String?     // Nullable initially
+  bids           Bid[]
 
   @@index([status])
   @@index([category])
+  @@index([auctionType])
 }
 
 model Bid {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  bidAmount  Float
-  bidderId   String
-  timestamp  DateTime @default(now())
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String   @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  bidAmount Float
+  bidderId  String
+  timestamp DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
 }
 
 model Ledger {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  productId  String
-  bidderId   String
-  bidAmount  Float
-  timestamp  DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId String
+  bidderId  String
+  bidAmount Float
+  timestamp DateTime @default(now())
 }

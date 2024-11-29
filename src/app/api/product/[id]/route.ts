@@ -1,3 +1,5 @@
+// app/api/product/[id]/route.ts
+
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
@@ -9,17 +11,41 @@ export async function GET(
     // Unwrap the params promise explicitly
     const { id } = await context.params;
 
-    // Fetch the product and its bids
+    // Fetch the product without bids initially
     const product = await prisma.product.findUnique({
       where: { id },
-      include: { bids: true },
+      include: {},
     });
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json(product);
+    let bids: Array<{ id: string; bidAmount: number; productId: string }> = [];
+
+    if (product.auctionType === "STANDARD") {
+      // Include bids for standard auctions
+      bids = await prisma.bid.findMany({
+        where: { productId: product.id },
+        orderBy: { bidAmount: "desc" },
+      });
+    } else if (product.auctionType === "SEALED") {
+      if (product.status !== "Active") {
+        // Include bids only after auction ends
+        bids = await prisma.bid.findMany({
+          where: { productId: product.id },
+          orderBy: { bidAmount: "desc" },
+        });
+      }
+      // Else, do not include bids
+    }
+
+    const responseProduct = {
+      ...product,
+      bids,
+    };
+
+    return NextResponse.json(responseProduct);
   } catch (error) {
     console.error("Error fetching product:", error);
     return NextResponse.json(

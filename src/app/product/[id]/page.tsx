@@ -1,103 +1,79 @@
+// app/product/[id]/page.tsx
+
 "use client";
 
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
+import { useParams } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import BidList from "@/components/BidList";
 import BidInput from "@/components/BidInput";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import Pusher from "pusher-js";
-import Image from "next/image";
 
-export default function ProductPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  interface Product {
-    id: string;
-    name: string;
-    description: string;
-    image: string;
-    currentBid: number;
-    bids: {
-      id: string;
-      bidderId: string;
-      bidAmount: number;
-      timestamp: string;
-    }[];
-    auctionEndTime: string;
-  }
+interface Bid {
+  id: string;
+  bidderId: string;
+  bidAmount: number;
+  timestamp: string;
+}
 
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  currentBid: number;
+  bids: Bid[];
+  auctionEndTime: string;
+  auctionType: string;
+  status: string;
+  winnerId?: string | null;
+}
+
+export default function ProductPage() {
+  const { user } = useUser();
+  const params = useParams();
+  const productId = params.id;
+  console.log(user);
   const [product, setProduct] = useState<Product | null>(null);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [auctionEnded, setAuctionEnded] = useState(false);
-  const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
-    null
-  );
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [auctionEnded, setAuctionEnded] = useState<boolean>(false);
+  const [isAssigningWinner, setIsAssigningWinner] = useState<boolean>(false);
 
-  useEffect(() => {
-    params.then((resolved) => setResolvedParams(resolved));
-  }, [params]);
-
-  useEffect(() => {
-    if (!resolvedParams) return;
-
-    const fetchProduct = async () => {
-      try {
-        const res = await axios.get(`/api/product/${resolvedParams.id}`);
-        setProduct(res.data);
-        const remainingTime =
-          new Date(res.data.auctionEndTime).getTime() - Date.now();
-        setTimeLeft(remainingTime > 0 ? remainingTime : 0);
-      } catch (error) {
-        console.error("Failed to fetch product data:", error);
+  // Function to fetch product data
+  const fetchProduct = async () => {
+    try {
+      const res = await axios.get(`/api/product/${productId}`);
+      setProduct(res.data);
+      const remainingTime =
+        new Date(res.data.auctionEndTime).getTime() - Date.now();
+      setTimeLeft(remainingTime > 0 ? remainingTime : 0);
+      if (remainingTime <= 0) {
+        setAuctionEnded(true);
       }
-    };
+    } catch (error) {
+      console.error("Failed to fetch product data:", error);
+    }
+  };
 
-    fetchProduct();
-
-    const pusher = new Pusher("your-pusher-key", {
-      cluster: "your-cluster",
-    });
-
-    const channel = pusher.subscribe(`product-${resolvedParams.id}`);
-    channel.bind(
-      "bid-placed",
-      (data: {
-        currentBid: number;
-        newBid: {
-          id: string;
-          bidderId: string;
-          bidAmount: number;
-          timestamp: string;
-        };
-      }) => {
-        setProduct((prev) => {
-          if (!prev) return prev;
-          return {
-            ...prev,
-            currentBid: data.currentBid,
-            bids: [
-              {
-                id: data.newBid.id,
-                bidderId: data.newBid.bidderId,
-                bidAmount: data.newBid.bidAmount,
-                timestamp: data.newBid.timestamp,
-              },
-              ...prev.bids,
-            ],
-          };
-        });
-      }
-    );
-
-    return () => {
-      pusher.unsubscribe(`product-${resolvedParams.id}`);
-    };
-  }, [resolvedParams]);
-
+  // Initial fetch and set up polling every 3 seconds
   useEffect(() => {
+    if (productId) {
+      fetchProduct();
+      const interval = setInterval(() => {
+        fetchProduct();
+      }, 3000); // 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [productId]);
+
+  // Timer for auction countdown
+  useEffect(() => {
+    if (!product) return;
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1000) {
@@ -110,16 +86,47 @@ export default function ProductPage({
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [product]);
 
-  if (!resolvedParams || !product)
-    return <div className="text-center mt-10">Loading...</div>;
+  // Assign winner if auction has ended and winnerId is not set
+  useEffect(() => {
+    const assignWinner = async () => {
+      if (
+        auctionEnded &&
+        product &&
+        !product.winnerId &&
+        product.status === "Active"
+      ) {
+        setIsAssigningWinner(true);
+        try {
+          const res = await axios.post(
+            `/api/product/${productId}/assign-winner`
+          );
+          setProduct(res.data); // Update with the new winnerId and status
+        } catch (error) {
+          console.error("Failed to assign winner:", error);
+        } finally {
+          setIsAssigningWinner(false);
+        }
+      }
+    };
+
+    assignWinner();
+  }, [auctionEnded, product, productId]);
+
+  if (!product)
+    return (
+      <>
+        <Navbar />
+        <div className="text-center mt-10">Loading...</div>
+        <Footer />
+      </>
+    );
 
   return (
-    <div>
+    <>
       <Navbar />
       <div className="container mx-auto my-8 px-4 lg:px-0 pt-24">
-        {/* Adjusted padding to avoid navbar overlap */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Section */}
           <div className="bg-white p-6 shadow-lg rounded-lg">
@@ -137,29 +144,59 @@ export default function ProductPage({
               {product.currentBid}
             </p>
             <p className="text-lg mt-4">
+              <span className="font-bold text-gray-800">Auction Type:</span>{" "}
+              {product.auctionType}
+            </p>
+            <p className="text-lg mt-4">
               <span className="font-bold text-gray-800">Time Left:</span>{" "}
               {auctionEnded
                 ? "Auction Ended"
-                : `${Math.floor(timeLeft / (60 * 60 * 1000))}h ${
-                    Math.floor(timeLeft / (60 * 1000)) % 60
-                  }m ${Math.floor(timeLeft / 1000) % 60}s`}
+                : `${Math.floor(timeLeft / (60 * 60 * 1000))}h ${Math.floor(
+                    (timeLeft / (60 * 1000)) % 60
+                  )}m ${Math.floor((timeLeft / 1000) % 60)}s`}
             </p>
-            <div className="mt-6">
-              <BidInput
-                productId={product.id}
-                currentBid={product.currentBid}
-                auctionEnded={auctionEnded}
-              />
-            </div>
+            {isAssigningWinner && (
+              <p className="text-blue-600 mt-4">Assigning winner...</p>
+            )}
+            {auctionEnded && product.winnerId && (
+              <p className="text-lg mt-4">
+                <span className="font-bold text-green-600">
+                  Winner Clerk ID:
+                </span>{" "}
+                {product.winnerId}
+              </p>
+            )}
+            {!auctionEnded && (
+              <div className="mt-6">
+                <BidInput
+                  productId={product.id}
+                  currentBid={product.currentBid}
+                  auctionEnded={auctionEnded}
+                />
+              </div>
+            )}
+            {auctionEnded &&
+              product.auctionType === "SEALED" &&
+              !product.winnerId && (
+                <p className="text-gray-600 mt-4">
+                  Bids are sealed. Awaiting auction results.
+                </p>
+              )}
           </div>
           {/* Right Section */}
           <div className="bg-white p-6 shadow-lg rounded-lg">
             <h2 className="text-2xl font-bold mb-4">Bid History</h2>
-            <BidList bids={product.bids} />
+            {product.auctionType === "SEALED" && product.status === "Active" ? (
+              <p className="text-gray-600">
+                Bids are sealed and not visible until auction ends.
+              </p>
+            ) : (
+              <BidList bids={product.bids} />
+            )}
           </div>
         </div>
       </div>
       <Footer />
-    </div>
+    </>
   );
 }

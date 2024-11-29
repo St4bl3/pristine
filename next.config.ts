@@ -3,7 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true, // Enables React Strict Mode
   images: {
-    domains: ["via.placeholder.com"], // Allow images from via.placeholder.com
+    domains: [
+      "via.placeholder.com",
+      "unsplash.com",
+      "plus.unsplash.com",
+      "i.redd.it",
+    ], // Allow images from via.placeholder.com
   },
 };
 
