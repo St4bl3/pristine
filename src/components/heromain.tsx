@@ -6,7 +6,7 @@ import { ImagesSlider } from "./ui/images-slider";
 export function ImagesSliderDemo() {
   const images = ["/2.jpg", "/3.jpg", "9.webp"];
   return (
-    <ImagesSlider className="h-[56rem]" images={images}>
+    <ImagesSlider className="w-screen h-screen" images={images}>
       <motion.div
         initial={{
           opacity: 0,
@@ -19,9 +19,9 @@ export function ImagesSliderDemo() {
         transition={{
           duration: 0.6,
         }}
-        className="z-50 flex flex-col justify-center items-center"
+        className="z-50 flex flex-col justify-center items-center w-full h-full"
       >
-        <motion.p className="font-bold text-xl md:text-6xl text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 py-4 ">
+        <motion.p className="font-bold text-xl md:text-6xl text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 py-4">
           Pristine Fashion Auctions
         </motion.p>
         <motion.p className="text-lg md:text-4xl text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 py-2">
