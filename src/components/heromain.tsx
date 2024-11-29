@@ -4,7 +4,7 @@ import React from "react";
 import { ImagesSlider } from "./ui/images-slider";
 
 export function ImagesSliderDemo() {
-  const images = ["/2.jpg", "/3.jpg"];
+  const images = ["/2.jpg", "/3.jpg", "9.webp"];
   return (
     <ImagesSlider className="h-[56rem]" images={images}>
       <motion.div

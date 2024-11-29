@@ -3,17 +3,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Explicitly define Params interface
+// Define Params interface
 interface Params {
   id: string;
 }
 
-// Explicitly typing the GET method with correct parameter handling
+// Define RouteContext interface, including params and searchParams
+interface RouteContext {
+  params: Params;
+  searchParams: URLSearchParams;
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Params } // Explicitly type `params`
-) {
-  const { id } = params; // Access the product id from the context
+  context: RouteContext
+): Promise<NextResponse> {
+  const { id } = context.params;
+
+  // Validate that 'id' is present
+  if (!id) {
+    return NextResponse.json(
+      { error: "Product ID is missing." },
+      { status: 400 }
+    );
+  }
 
   try {
     // Fetch bids for the specific product using Prisma
@@ -22,7 +35,7 @@ export async function GET(
       orderBy: { timestamp: "desc" },
     });
 
-    return NextResponse.json(bids);
+    return NextResponse.json(bids); // Return the fetched bids as JSON
   } catch (error) {
     console.error("Error fetching bids:", error);
     return NextResponse.json(

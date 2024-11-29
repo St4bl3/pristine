@@ -16,7 +16,7 @@ export function PristineTimeline() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="/1.png"
+              src="/4.webp"
               alt="Fashion Auction"
               width={500}
               height={500}
@@ -36,7 +36,7 @@ export function PristineTimeline() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="/1.png"
+              src="/5.jpg"
               alt="Blockchain Transactions"
               width={500}
               height={500}
@@ -57,7 +57,7 @@ export function PristineTimeline() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="/1.png"
+              src="/6.jpg"
               alt="Multi-Tier Auctioning"
               width={500}
               height={500}
@@ -77,7 +77,7 @@ export function PristineTimeline() {
           </p>
           <div className="grid grid-cols-2 gap-4">
             <Image
-              src="/1.png"
+              src="/7.png"
               alt="Real-Time Updates"
               width={500}
               height={500}
