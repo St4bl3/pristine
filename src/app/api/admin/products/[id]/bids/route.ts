@@ -3,12 +3,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// Define Params interface
+// Define the Params interface
 interface Params {
   id: string;
 }
 
-// Define RouteContext interface, including params and searchParams
+// Define the RouteContext interface, including params and searchParams
 interface RouteContext {
   params: Params;
   searchParams: URLSearchParams;
@@ -18,7 +18,8 @@ export async function GET(
   request: NextRequest,
   context: RouteContext
 ): Promise<NextResponse> {
-  const { id } = context.params;
+  const { params } = context;
+  const { id } = params;
 
   // Validate that 'id' is present
   if (!id) {
