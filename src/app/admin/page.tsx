@@ -5,10 +5,10 @@
 import { useUser } from "@clerk/nextjs";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import axios from "axios";
 import { useState } from "react";
+import Navbar2 from "@/components/navbaradmin";
 
 interface Product {
   id: string;
@@ -45,7 +45,9 @@ export default function AdminPage() {
   const [image, setImage] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [startingPrice, setStartingPrice] = useState<number>(0);
-  const [auctionType, setAuctionType] = useState<"STANDARD" | "SEALED">("STANDARD");
+  const [auctionType, setAuctionType] = useState<"STANDARD" | "SEALED">(
+    "STANDARD"
+  );
   const [auctionEndTime, setAuctionEndTime] = useState<string>("");
 
   const [editProductId, setEditProductId] = useState<string | null>(null);
@@ -54,7 +56,9 @@ export default function AdminPage() {
   const [editImage, setEditImage] = useState<string>("");
   const [editDescription, setEditDescription] = useState<string>("");
   const [editStartingPrice, setEditStartingPrice] = useState<number>(0);
-  const [editAuctionType, setEditAuctionType] = useState<"STANDARD" | "SEALED">("STANDARD");
+  const [editAuctionType, setEditAuctionType] = useState<"STANDARD" | "SEALED">(
+    "STANDARD"
+  );
   const [editAuctionEndTime, setEditAuctionEndTime] = useState<string>("");
 
   useEffect(() => {
@@ -123,7 +127,9 @@ export default function AdminPage() {
     setEditDescription(product.description);
     setEditStartingPrice(product.startingPrice);
     setEditAuctionType(product.auctionType);
-    setEditAuctionEndTime(new Date(product.auctionEndTime).toISOString().slice(0,16)); // For input type datetime-local
+    setEditAuctionEndTime(
+      new Date(product.auctionEndTime).toISOString().slice(0, 16)
+    ); // For input type datetime-local
   };
 
   const handleUpdateProduct = async (e: React.FormEvent) => {
@@ -163,8 +169,10 @@ export default function AdminPage() {
   if (loading) {
     return (
       <div>
-        <Navbar />
-        <div className="text-center mt-10">Loading...</div>
+        <Navbar2 />
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-center text-gray-500">Loading...</div>
+        </div>
         <Footer />
       </div>
     );
@@ -172,13 +180,20 @@ export default function AdminPage() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar2 />
       <div className="container mx-auto px-4 lg:px-0 my-8 pt-20">
-        <h1 className="text-4xl font-bold mb-6 text-center">Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold mb-6 text-center text-accent1">
+          Admin Dashboard
+        </h1>
         {/* Create Product Form */}
-        <div className="bg-white p-6 shadow-md rounded-lg mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Create New Product</h2>
-          <form onSubmit={handleCreateProduct} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-accent1">
+            Create New Product
+          </h2>
+          <form
+            onSubmit={handleCreateProduct}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
             <div>
               <label className="block text-gray-700">Name</label>
               <input
@@ -186,7 +201,7 @@ export default function AdminPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               />
             </div>
             <div>
@@ -196,7 +211,7 @@ export default function AdminPage() {
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               />
             </div>
             <div>
@@ -206,16 +221,18 @@ export default function AdminPage() {
                 value={image}
                 onChange={(e) => setImage(e.target.value)}
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               />
             </div>
             <div>
               <label className="block text-gray-700">Auction Type</label>
               <select
                 value={auctionType}
-                onChange={(e) => setAuctionType(e.target.value as "STANDARD" | "SEALED")}
+                onChange={(e) =>
+                  setAuctionType(e.target.value as "STANDARD" | "SEALED")
+                }
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               >
                 <option value="STANDARD">Standard</option>
                 <option value="SEALED">Sealed</option>
@@ -227,7 +244,9 @@ export default function AdminPage() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
+                rows={4}
+                placeholder="Enter product description..."
               ></textarea>
             </div>
             <div>
@@ -239,7 +258,7 @@ export default function AdminPage() {
                 required
                 min={0}
                 step={0.01}
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               />
             </div>
             <div>
@@ -249,13 +268,13 @@ export default function AdminPage() {
                 value={auctionEndTime}
                 onChange={(e) => setAuctionEndTime(e.target.value)}
                 required
-                className="w-full border px-3 py-2 rounded-md"
+                className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
               />
             </div>
             <div className="md:col-span-2 text-right">
               <button
                 type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                className="bg-accent1 text-white px-6 py-2 rounded-md hover:bg-accent2 transition-colors duration-300"
               >
                 Create Product
               </button>
@@ -264,67 +283,86 @@ export default function AdminPage() {
         </div>
 
         {/* Product List */}
-        <div className="bg-white p-6 shadow-md rounded-lg">
-          <h2 className="text-2xl font-semibold mb-4">Existing Products</h2>
-          <table className="min-w-full table-auto">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="px-4 py-2">Name</th>
-                <th className="px-4 py-2">Category</th>
-                <th className="px-4 py-2">Auction Type</th>
-                <th className="px-4 py-2">Current Bid</th>
-                <th className="px-4 py-2">Auction End Time</th>
-                <th className="px-4 py-2">Status</th>
-                <th className="px-4 py-2">Winner</th>
-                <th className="px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => (
-                <tr key={product.id} className="border-t">
-                  <td className="px-4 py-2">{product.name}</td>
-                  <td className="px-4 py-2">{product.category}</td>
-                  <td className="px-4 py-2">{product.auctionType}</td>
-                  <td className="px-4 py-2">${product.currentBid.toFixed(2)}</td>
-                  <td className="px-4 py-2">
-                    {new Date(product.auctionEndTime).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">{product.status}</td>
-                  <td className="px-4 py-2">{product.winnerId || "N/A"}</td>
-                  <td className="px-4 py-2">
-                    <button
-                      onClick={() => handleEditProduct(product)}
-                      className="bg-yellow-500 text-white px-2 py-1 rounded-md mr-2 hover:bg-yellow-600 transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteProduct(product.id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 transition"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+          <h2 className="text-2xl font-semibold mb-4 text-accent1">
+            Existing Products
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full table-auto">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="px-4 py-2 text-left text-gray-700">Name</th>
+                  <th className="px-4 py-2 text-left text-gray-700">
+                    Category
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700">
+                    Auction Type
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700">
+                    Current Bid
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700">
+                    Auction End Time
+                  </th>
+                  <th className="px-4 py-2 text-left text-gray-700">Status</th>
+                  <th className="px-4 py-2 text-left text-gray-700">Winner</th>
+                  <th className="px-4 py-2 text-left text-gray-700">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product.id} className="border-t">
+                    <td className="px-4 py-2">{product.name}</td>
+                    <td className="px-4 py-2">{product.category}</td>
+                    <td className="px-4 py-2">{product.auctionType}</td>
+                    <td className="px-4 py-2">
+                      ${product.currentBid.toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2">
+                      {new Date(product.auctionEndTime).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">{product.status}</td>
+                    <td className="px-4 py-2">{product.winnerId || "N/A"}</td>
+                    <td className="px-4 py-2">
+                      <button
+                        onClick={() => handleEditProduct(product)}
+                        className="bg-accent1 text-white px-3 py-1 rounded-md mr-2 hover:bg-accent2 transition-colors duration-300"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(product.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition-colors duration-300"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Edit Product Modal */}
         {editProductId && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg w-full max-w-lg">
+            <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-lg">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-semibold">Edit Product</h2>
+                <h2 className="text-2xl font-semibold text-accent1">
+                  Edit Product
+                </h2>
                 <button
                   onClick={() => setEditProductId(null)}
-                  className="text-gray-700 hover:text-gray-900 text-xl font-bold"
+                  className="text-gray-700 hover:text-gray-900 text-2xl font-bold"
                 >
                   &times;
                 </button>
               </div>
-              <form onSubmit={handleUpdateProduct} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <form
+                onSubmit={handleUpdateProduct}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
                 <div>
                   <label className="block text-gray-700">Name</label>
                   <input
@@ -332,7 +370,7 @@ export default function AdminPage() {
                     value={editName}
                     onChange={(e) => setEditName(e.target.value)}
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   />
                 </div>
                 <div>
@@ -342,7 +380,7 @@ export default function AdminPage() {
                     value={editCategory}
                     onChange={(e) => setEditCategory(e.target.value)}
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   />
                 </div>
                 <div>
@@ -352,16 +390,20 @@ export default function AdminPage() {
                     value={editImage}
                     onChange={(e) => setEditImage(e.target.value)}
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   />
                 </div>
                 <div>
                   <label className="block text-gray-700">Auction Type</label>
                   <select
                     value={editAuctionType}
-                    onChange={(e) => setEditAuctionType(e.target.value as "STANDARD" | "SEALED")}
+                    onChange={(e) =>
+                      setEditAuctionType(
+                        e.target.value as "STANDARD" | "SEALED"
+                      )
+                    }
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   >
                     <option value="STANDARD">Standard</option>
                     <option value="SEALED">Sealed</option>
@@ -373,7 +415,9 @@ export default function AdminPage() {
                     value={editDescription}
                     onChange={(e) => setEditDescription(e.target.value)}
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
+                    rows={4}
+                    placeholder="Enter product description..."
                   ></textarea>
                 </div>
                 <div>
@@ -381,34 +425,38 @@ export default function AdminPage() {
                   <input
                     type="number"
                     value={editStartingPrice}
-                    onChange={(e) => setEditStartingPrice(Number(e.target.value))}
+                    onChange={(e) =>
+                      setEditStartingPrice(Number(e.target.value))
+                    }
                     required
                     min={0}
                     step={0.01}
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   />
                 </div>
                 <div>
-                  <label className="block text-gray-700">Auction End Time</label>
+                  <label className="block text-gray-700">
+                    Auction End Time
+                  </label>
                   <input
                     type="datetime-local"
                     value={editAuctionEndTime}
                     onChange={(e) => setEditAuctionEndTime(e.target.value)}
                     required
-                    className="w-full border px-3 py-2 rounded-md"
+                    className="w-full border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-accent1 transition-colors duration-200"
                   />
                 </div>
                 <div className="md:col-span-2 flex justify-end">
                   <button
                     type="button"
                     onClick={() => setEditProductId(null)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2 hover:bg-gray-600 transition"
+                    className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition-colors duration-300 mr-2"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                    className="bg-accent1 text-white px-4 py-2 rounded-md hover:bg-accent2 transition-colors duration-300"
                   >
                     Update
                   </button>

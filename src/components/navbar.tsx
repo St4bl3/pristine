@@ -1,4 +1,7 @@
+// components/Navbar.tsx
+
 "use client";
+
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { SignInButton, UserButton, useAuth } from "@clerk/nextjs";
@@ -24,84 +27,50 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      style={{
-        position: "fixed",
-        top: showNav ? "0" : "-70px",
-        width: "100%",
-        backgroundColor: "rgba(255, 255, 255, 0.8)", // Translucent background
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "20px 40px",
-        zIndex: 10,
-        transition: "top 0.3s ease-in-out",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-        borderBottom: `2px solid #ffffff`, // White line for the bottom border
-        backdropFilter: "blur(10px)", // Adds a subtle blur effect
-      }}
+      className={`fixed top-0 w-full bg-white bg-opacity-80 backdrop-blur-md flex items-center justify-between px-8 py-4 z-50 transition-transform duration-300 ${
+        showNav ? "translate-y-0" : "-translate-y-full"
+      } shadow-md border-b border-white`}
     >
-      <div style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#6c69eb" }}>
+      {/* Logo */}
+      <div className="text-2xl font-bold text-accent1">
         <Link href="/">Pristine</Link>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          gap: "30px",
-          fontSize: "1rem",
-          fontWeight: "500",
-        }}
-      >
-        <Link href="/" style={{ color: "#6c69eb", textDecoration: "none" }}>
+      {/* Navigation Links */}
+      <div className="hidden md:flex space-x-8 text-accent1 font-medium">
+        <Link
+          href="/"
+          className="hover:text-accent2 transition-colors duration-200"
+        >
           Home
         </Link>
-        <Link href="/men" style={{ color: "#6c69eb", textDecoration: "none" }}>
+        <Link
+          href="/men"
+          className="hover:text-accent2 transition-colors duration-200"
+        >
           Men
         </Link>
         <Link
           href="/women"
-          style={{ color: "#6c69eb", textDecoration: "none" }}
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Women
         </Link>
         <Link
           href="/children"
-          style={{ color: "#6c69eb", textDecoration: "none" }}
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Children
         </Link>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+      {/* User Authentication */}
+      <div className="flex items-center space-x-4">
         {isSignedIn ? (
-          // Show UserButton when signed in
           <UserButton />
         ) : (
-          // Show SignInButton when not signed in
           <SignInButton mode="modal">
-            <button
-              style={{
-                background: "#8e00cc",
-                border: "none",
-                color: "#ffffff",
-                padding: "10px 20px",
-                borderRadius: "25px",
-                fontWeight: "500",
-                cursor: "pointer",
-                transition: "transform 0.3s, box-shadow 0.3s",
-                boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-              }}
-              onMouseEnter={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(1.05)";
-                (e.target as HTMLButtonElement).style.boxShadow =
-                  "0 6px 20px rgba(0, 0, 0, 0.3)";
-              }}
-              onMouseLeave={(e) => {
-                (e.target as HTMLButtonElement).style.transform = "scale(1)";
-                (e.target as HTMLButtonElement).style.boxShadow =
-                  "0 4px 15px rgba(0, 0, 0, 0.2)";
-              }}
-            >
+            <button className="bg-accent2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-accent1 transition-transform duration-200 transform hover:scale-105">
               Sign In
             </button>
           </SignInButton>

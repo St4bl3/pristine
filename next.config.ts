@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       "unsplash.com",
       "plus.unsplash.com",
       "i.redd.it",
+      "images.unsplash.com",
     ], // Allow images from via.placeholder.com
   },
 };

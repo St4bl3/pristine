@@ -15,7 +15,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 transform hover:-translate-y-2">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300">
       <Image
         src={product.image}
         alt={product.name}
@@ -24,13 +24,17 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="w-full h-48 object-cover"
       />
       <div className="p-4">
-        <h2 className="text-lg font-bold text-gray-800">{product.name}</h2>
-        <p className="text-gray-600 mt-2">Current Bid: ${product.currentBid}</p>
+        <h2 className="text-lg font-medium text-gray-800">{product.name}</h2>
+        <p className="text-gray-600 mt-2">
+          <span className="font-medium text-accent1">Current Bid:</span> $
+          {product.currentBid}
+        </p>
         <p className="text-gray-600 mt-1">
-          Auction Type: {product.auctionType}
+          <span className="font-medium text-accent1">Auction Type:</span>{" "}
+          {product.auctionType}
         </p>
         <Link href={`/product/${product.id}`}>
-          <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-transform duration-300">
+          <button className="mt-4 w-full bg-accent1 text-white py-2 rounded-md hover:bg-accent2 transition-colors duration-300">
             View Details
           </button>
         </Link>
