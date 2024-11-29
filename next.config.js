@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+// next.config.js
 
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true, // Enables React Strict Mode
+
   images: {
     domains: [
       "via.placeholder.com",
@@ -9,8 +11,8 @@ const nextConfig: NextConfig = {
       "plus.unsplash.com",
       "i.redd.it",
       "images.unsplash.com",
-    ], // Allow images from via.placeholder.com
+    ], // Allow images from specified domains
   },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
