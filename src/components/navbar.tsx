@@ -27,38 +27,38 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full bg-gray-800 bg-opacity-30 backdrop-blur-lg flex items-center justify-between px-8 py-4 z-50 transition-transform duration-300 ${
+      className={`fixed top-0 w-full bg-white bg-opacity-0 backdrop-blur-md flex items-center justify-between px-8 py-4 z-50 transition-transform duration-300 ${
         showNav ? "translate-y-0" : "-translate-y-full"
-      } shadow-md border-b border-gray-700`}
+      } shadow-md border-b border-white`}
     >
       {/* Logo */}
-      <div className="text-2xl font-bold text-white">
+      <div className="text-2xl font-bold text-accent1">
         <Link href="/">Pristine</Link>
       </div>
 
       {/* Navigation Links */}
-      <div className="hidden md:flex space-x-8 text-white font-medium">
+      <div className="hidden md:flex space-x-8 text-accent1 font-medium">
         <Link
           href="/"
-          className="hover:text-yellow-500 transition-colors duration-200"
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Home
         </Link>
         <Link
           href="/men"
-          className="hover:text-yellow-500 transition-colors duration-200"
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Men
         </Link>
         <Link
           href="/women"
-          className="hover:text-yellow-500 transition-colors duration-200"
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Women
         </Link>
         <Link
           href="/children"
-          className="hover:text-yellow-500 transition-colors duration-200"
+          className="hover:text-accent2 transition-colors duration-200"
         >
           Children
         </Link>
@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
           <UserButton />
         ) : (
           <SignInButton mode="modal">
-            <button className="bg-yellow-500 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-yellow-400 transition-transform duration-200 transform hover:scale-105">
+            <button className="bg-accent2 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-accent1 transition-transform duration-200 transform hover:scale-105">
               Sign In
             </button>
           </SignInButton>
