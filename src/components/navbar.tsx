@@ -27,38 +27,38 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full bg-white bg-opacity-80 backdrop-blur-md flex items-center justify-between px-8 py-4 z-50 transition-transform duration-300 ${
+      className={`fixed top-0 w-full bg-opacity-0 backdrop-blur-md flex items-center justify-between px-8 py-4 z-50 transition-transform duration-300 ${
         showNav ? "translate-y-0" : "-translate-y-full"
-      } shadow-md border-b border-white`}
+      } shadow-md border-b border-transparent`}
     >
       {/* Logo */}
-      <div className="text-2xl font-bold text-accent1">
+      <div className="text-2xl font-bold text-white">
         <Link href="/">Pristine</Link>
       </div>
 
       {/* Navigation Links */}
-      <div className="hidden md:flex space-x-8 text-accent1 font-medium">
+      <div className="hidden md:flex space-x-8 text-white font-medium">
         <Link
           href="/"
-          className="hover:text-accent2 transition-colors duration-200"
+          className="hover:text-white transition-colors duration-200"
         >
           Home
         </Link>
         <Link
           href="/men"
-          className="hover:text-accent2 transition-colors duration-200"
+          className="hover:text-white transition-colors duration-200"
         >
           Men
         </Link>
         <Link
           href="/women"
-          className="hover:text-accent2 transition-colors duration-200"
+          className="hover:text-white transition-colors duration-200"
         >
           Women
         </Link>
         <Link
           href="/children"
-          className="hover:text-accent2 transition-colors duration-200"
+          className="hover:text-white transition-colors duration-200"
         >
           Children
         </Link>
